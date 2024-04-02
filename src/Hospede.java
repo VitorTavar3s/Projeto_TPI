@@ -11,7 +11,6 @@ import java.util.stream.Stream;
 public class Hospede {
     static Scanner scanner = new Scanner(System.in);
     String cpf,nome;
-    static String arquivo = "hospede.csv";
 
     public Hospede(String cpf, String nome) {
         this.cpf = cpf;
