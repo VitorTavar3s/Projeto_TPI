@@ -42,10 +42,12 @@ public class Reserva {
             System.out.println("CPF não cadastrado. Cadastre o hóspede primeiro.\n");
             return; // Sai do método em caso de CPF não cadastrado
         }
+
         System.out.println("Escolha o quarto para sua estadia:");
         System.out.println("1-Quarto Simples | 2-Quarto Duplo | 3-Suíte Dupla | 4-Suíte Presidencial");
         char quarto = scanner.next().charAt(0);
         scanner.nextLine();
+
         System.out.println("Digite a data de Check-in(dd/MM/yyyy):");
         String entrada = scanner.nextLine();
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -55,6 +57,7 @@ public class Reserva {
             System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy.");
             return;
         }
+
         System.out.println("Digite a hora de Check-in(HH:mm)-(A diária é contabilizada à partir de 12:00h):");
         String entradaHora = scanner.nextLine();
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -64,6 +67,7 @@ public class Reserva {
             System.out.println("Formato de hora inválido. Use o formato HH:mm.");
             return;
         }
+
         System.out.println("Digite a data de Check-out(dd/MM/yyyy):");
         String saida = scanner.nextLine();
         try {
@@ -72,6 +76,7 @@ public class Reserva {
             System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy.");
             return;
         }
+        
         System.out.println("Digite a hora de Check-out(HH:mm)-(A diária é contabilizada à partir de 12:00h):");
         String saidaHora = scanner.nextLine();
         try {
