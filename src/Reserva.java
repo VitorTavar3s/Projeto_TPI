@@ -126,5 +126,112 @@ public class Reserva {
     }
 
     public static void alterar() { 
+        
+        if (reservas.isEmpty()) {
+            System.out.println("Não há reservas para alterar.");
+            return;
+        }
+    
+        System.out.println("Lista de reservas:");
+        for (int i = 0; i < reservas.size(); i++) {
+            Reserva reserva = reservas.get(i);
+            System.out.println((i + 1) + ". CPF: " + reserva.cpf + ", Quarto: " + reserva.quarto + ", Entrada: " + reserva.dataEntrada + ", Saída: " + reserva.dataSaida);
+        }
+    
+        System.out.println("Digite o número da reserva que deseja alterar:");
+        int numeroReserva = scanner.nextInt();
+        scanner.nextLine();
+    
+        if (numeroReserva < 1 || numeroReserva > reservas.size()) {
+            System.out.println("Número de reserva inválido.");
+            return;
+        }
+    
+        Reserva reservaSelecionada = reservas.get(numeroReserva - 1);
+    
+        boolean continuarAlterando = true;
+    
+        do {
+            System.out.println("Escolha o que deseja alterar:");
+            System.out.println("1. Tipo de quarto");
+            System.out.println("2. Data do check-in");
+            System.out.println("3. Data do check-out");
+            System.out.println("4. Horário do check-in");
+            System.out.println("5. Horário do check-out");
+    
+            int opcao = scanner.nextInt();
+            scanner.nextLine();
+
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+    
+            switch (opcao) {
+                case 1:
+                    System.out.println("Escolha o novo tipo de quarto:");
+                    System.out.println("1-Quarto Simples | 2-Quarto Duplo | 3-Suíte Dupla | 4-Suíte Presidencial");
+                    char novoQuarto = scanner.next().charAt(0);
+                    scanner.nextLine();
+                    reservaSelecionada.quarto = novoQuarto;
+                    break;
+                case 2:
+                    System.out.println("Digite a nova data de Check-in (dd/MM/yyyy):");
+                    String novaDataCheckIn = scanner.nextLine();
+                    try {
+                        LocalDate novaEntradaDate = LocalDate.parse(novaDataCheckIn, dateFormatter);
+                        reservaSelecionada.dataEntrada = reservaSelecionada.dataEntrada.with(novaEntradaDate);
+                    } catch (DateTimeParseException e) {
+                        System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy.");
+                        return;
+                    }
+                    break;
+                case 3:
+                    System.out.println("Digite a nova data de Check-out (dd/MM/yyyy):");
+                    String novaDataCheckOut = scanner.nextLine();
+                    try {
+                        LocalDate novaSaidaDate = LocalDate.parse(novaDataCheckOut, dateFormatter);
+                        reservaSelecionada.dataSaida = reservaSelecionada.dataSaida.with(novaSaidaDate);
+                    } catch (DateTimeParseException e) {
+                        System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy.");
+                        return;
+                    }
+                    break;
+                case 4:
+                    System.out.println("Digite o novo horário do Check-in (HH:mm):");
+                    String novoHorarioCheckIn = scanner.nextLine();
+                    try {
+                        LocalTime novoCheckInTime = LocalTime.parse(novoHorarioCheckIn, timeFormatter);
+                        reservaSelecionada.dataEntrada = reservaSelecionada.dataEntrada.with(novoCheckInTime);
+                    } catch (DateTimeParseException e) {
+                        System.out.println("Formato de horário inválido. Use o formato HH:mm.");
+                        return;
+                    }
+                    break;
+                case 5:
+                    System.out.println("Digite o novo horário do Check-out (HH:mm):");
+                    String novoHorarioCheckOut = scanner.nextLine();
+                    try {
+                        LocalTime novoCheckOutTime = LocalTime.parse(novoHorarioCheckOut, timeFormatter);
+                        reservaSelecionada.dataSaida = reservaSelecionada.dataSaida.with(novoCheckOutTime);
+                    } catch (DateTimeParseException e) {
+                        System.out.println("Formato de horário inválido. Use o formato HH:mm.");
+                        return;
+                    }
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
+                    break;
+            }
+    
+            System.out.println("Deseja fazer mais alguma alteração? (S/N)");
+            String resposta = scanner.nextLine();
+            if (!resposta.equalsIgnoreCase("S")) {
+                continuarAlterando = false;
+            }
+    
+        } while (continuarAlterando);
+    
+        System.out.println("Reserva alterada com sucesso:");
+        System.out.println("CPF: " + reservaSelecionada.cpf + ", Quarto: " + reservaSelecionada.quarto + ", Nova Entrada: " + reservaSelecionada.dataEntrada + ", Nova Saída: " + reservaSelecionada.dataSaida);
     }
+    
 }
