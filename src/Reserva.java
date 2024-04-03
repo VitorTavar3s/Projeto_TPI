@@ -1,4 +1,6 @@
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -76,7 +78,7 @@ public class Reserva {
             System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy.");
             return;
         }
-        
+
         System.out.println("Digite a hora de Check-out(HH:mm)-(A diária é contabilizada à partir de 12:00h):");
         String saidaHora = scanner.nextLine();
         try {
@@ -98,8 +100,31 @@ public class Reserva {
     }
 
     public static void cancelar() {
+        if (reservas.isEmpty()) {
+            System.out.println("Não há reservas para cancelar.");
+            return;
+        }
+    
+        System.out.println("Lista de reservas:");
+        for (int i = 0; i < reservas.size(); i++) {
+            Reserva reserva = reservas.get(i);
+            System.out.println((i + 1) + ". CPF: " + reserva.cpf + ", Quarto: " + reserva.quarto + ", Entrada: " + reserva.dataEntrada + ", Saída: " + reserva.dataSaida);
+        }
+    
+        System.out.println("Digite o número da reserva que deseja cancelar:");
+        int numeroReserva = scanner.nextInt();
+        scanner.nextLine(); 
+    
+        if (numeroReserva < 1 || numeroReserva > reservas.size()) {
+            System.out.println("Número de reserva inválido.");
+            return;
+        }
+    
+        Reserva reservaCancelada = reservas.remove(numeroReserva - 1);
+        System.out.println("Reserva cancelada com sucesso:");
+        System.out.println("CPF: " + reservaCancelada.cpf + ", Quarto: " + reservaCancelada.quarto + ", Entrada: " + reservaCancelada.dataEntrada + ", Saída: " + reservaCancelada.dataSaida);
     }
 
-    public static void alterar() {
+    public static void alterar() { 
     }
 }
