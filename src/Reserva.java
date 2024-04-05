@@ -83,6 +83,14 @@ public class Reserva {
             return;
         }
 
+        LocalDate dataAtual = LocalDate.now();
+        LocalDate dataCheckIn = LocalDate.parse(entrada, dateFormatter);
+
+        if (dataCheckIn.isBefore(dataAtual)) {
+            System.out.println("A data de check-in não pode ser anterior à data de hoje!");
+            return;
+        }
+
         System.out.println("Digite a hora de Check-in(HH:mm)-(A diária é contabilizada à partir de 12:00h):");
         String entradaHora = scanner.nextLine();
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -102,6 +110,16 @@ public class Reserva {
             return;
         }
 
+        LocalDate dataCheckOut = LocalDate.parse(saida, dateFormatter);
+
+        if (dataCheckOut.isBefore(dataCheckIn)) {
+            System.out.println("A data de check-out não pode ser anterior à data de check-in.");
+            return;
+        }
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy-HH:mm");
+        LocalDateTime dataEntrada = LocalDateTime.parse(entrada + "-" + entradaHora, formatter);
+
         System.out.println("Digite a hora de Check-out(HH:mm)-(A diária é contabilizada à partir de 12:00h):");
         String saidaHora = scanner.nextLine();
         try {
@@ -111,8 +129,6 @@ public class Reserva {
             return;
         }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy-HH:mm");
-        LocalDateTime dataEntrada = LocalDateTime.parse(entrada + "-" + entradaHora, formatter);
         LocalDateTime dataSaida = LocalDateTime.parse(saida + "-" + saidaHora, formatter);
 
         Reserva reserva = new Reserva(cpf2,quarto,dataEntrada,dataSaida);
