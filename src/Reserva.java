@@ -3,8 +3,10 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Reserva {
@@ -12,10 +14,10 @@ public class Reserva {
     static List<Reserva> reservas = new ArrayList<>();
 
     String cpf;
-    char quarto;
+    int quarto;
     LocalDateTime dataEntrada,dataSaida;
 
-    public Reserva(String cpf,char quarto, LocalDateTime dataEntrada, LocalDateTime dataSaida) {
+    public Reserva(String cpf,int quarto, LocalDateTime dataEntrada, LocalDateTime dataSaida) {
         this.cpf = cpf;
         this.quarto = quarto;
         this.dataEntrada = dataEntrada;
@@ -36,7 +38,7 @@ public class Reserva {
         for (Hospede hospede : Main.hospedes) {
             if (hospede.getCpf().equals(cpf2)) {
                 cpfCadastrado = true;
-                break; // Encerra o loop assim que encontrar o CPF cadastrado
+                break;
             }
         }
 
@@ -46,9 +48,26 @@ public class Reserva {
         }
 
         System.out.println("Escolha o quarto para sua estadia:");
-        System.out.println("1-Quarto Simples | 2-Quarto Duplo | 3-Suíte Dupla | 4-Suíte Presidencial");
-        char quarto = scanner.next().charAt(0);
+        System.out.println("1-Quarto Simples R$:100,00 | 2-Quarto Duplo R$:180,00| 3-Suíte Dupla R$:250,00|" +
+                " 4-Suíte Presidencial R$:350,00");
+        int quarto = scanner.nextInt();
         scanner.nextLine();
+
+        double valorDiaria = 0.0;
+        switch (quarto){
+            case 1:
+                 valorDiaria = 100.00;
+            break;
+            case 2:
+                 valorDiaria = 180.00;
+            break;
+            case 3:
+                 valorDiaria = 250.00;
+            break;
+            case 4:
+                 valorDiaria = 350.00;
+            break;
+        }
 
         System.out.println("Digite a data de Check-in(dd/MM/yyyy):");
         String entrada = scanner.nextLine();
@@ -95,8 +114,21 @@ public class Reserva {
         Reserva reserva = new Reserva(cpf2,quarto,dataEntrada,dataSaida);
         reservas.add(reserva);
 
-        System.out.println("Reserva cadastrada com sucesso!");
+        long diasHospedagem = ChronoUnit.DAYS.between(dataEntrada.toLocalDate(), dataSaida.toLocalDate());
 
+        double totalReserva = valorDiaria * diasHospedagem;
+
+        DateTimeFormatter formatterDiaSemana = DateTimeFormatter.ofPattern("EEEE",
+                new Locale("pt", "BR"));
+
+        String diaSemanaEntrada = formatterDiaSemana.format(dataEntrada);
+        String diaSemanaSaida = formatterDiaSemana.format(dataSaida);
+
+        System.out.println();
+        System.out.println("Reserva cadastrada com sucesso! \n" +
+                "Você ficará hospedado por " + diasHospedagem + " dias, check-in dia: " + entrada +
+                " " +diaSemanaEntrada + " e check-out dia: " + saida + " " +diaSemanaSaida + "! \n" +
+                "O valor total da hospedagem é de R$" + totalReserva);
     }
 
     public static void cancelar() {
