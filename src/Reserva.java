@@ -47,27 +47,31 @@ public class Reserva {
             return; // Sai do método em caso de CPF não cadastrado
         }
 
-        System.out.println("Escolha o quarto para sua estadia:");
-        System.out.println("1-Quarto Simples R$:100,00 | 2-Quarto Duplo R$:180,00| 3-Suíte Dupla R$:250,00|" +
-                " 4-Suíte Presidencial R$:350,00");
-        int quarto = scanner.nextInt();
-        scanner.nextLine();
-
+        int quarto = 0;
         double valorDiaria = 0.0;
-        switch (quarto){
-            case 1:
-                 valorDiaria = 100.00;
-            break;
-            case 2:
-                 valorDiaria = 180.00;
-            break;
-            case 3:
-                 valorDiaria = 250.00;
-            break;
-            case 4:
-                 valorDiaria = 350.00;
-            break;
-        }
+        do {
+            System.out.println("Escolha o quarto para sua estadia:");
+            System.out.println("1-Quarto Simples R$:100,00 | 2-Quarto Duplo R$:180,00| 3-Suíte Dupla R$:250,00|" +
+                    " 4-Suíte Presidencial R$:350,00|");
+
+            quarto = scanner.nextInt();
+            scanner.nextLine();
+            switch (quarto){
+                case 1:
+                    valorDiaria = 100.00;
+                    break;
+                case 2:
+                    valorDiaria = 180.00;
+                    break;
+                case 3:
+                    valorDiaria = 250.00;
+                    break;
+                case 4:
+                    valorDiaria = 350.00;
+                    break;
+                default: System.out.println("Quarto " + quarto + " é inválido, Digite 1, 2, 3 ou 4 \n");
+            }
+        }while (quarto > 4 || quarto < 1);
 
         System.out.println("Digite a data de Check-in(dd/MM/yyyy):");
         String entrada = scanner.nextLine();
@@ -140,7 +144,8 @@ public class Reserva {
         System.out.println("Lista de reservas:");
         for (int i = 0; i < reservas.size(); i++) {
             Reserva reserva = reservas.get(i);
-            System.out.println((i + 1) + ". CPF: " + reserva.cpf + ", Quarto: " + reserva.quarto + ", Entrada: " + reserva.dataEntrada + ", Saída: " + reserva.dataSaida);
+            System.out.println((i + 1) + ". CPF: " + reserva.cpf + ", Quarto: " + reserva.quarto +
+                    ", Entrada: " + reserva.dataEntrada + ", Saída: " + reserva.dataSaida);
         }
     
         System.out.println("Digite o número da reserva que deseja cancelar:");
@@ -154,7 +159,8 @@ public class Reserva {
     
         Reserva reservaCancelada = reservas.remove(numeroReserva - 1);
         System.out.println("Reserva cancelada com sucesso:");
-        System.out.println("CPF: " + reservaCancelada.cpf + ", Quarto: " + reservaCancelada.quarto + ", Entrada: " + reservaCancelada.dataEntrada + ", Saída: " + reservaCancelada.dataSaida);
+        System.out.println("CPF: " + reservaCancelada.cpf + ", Quarto: " + reservaCancelada.quarto +
+                ", Entrada: " + reservaCancelada.dataEntrada + ", Saída: " + reservaCancelada.dataSaida);
     }
 
     public static void alterar() { 
@@ -167,7 +173,8 @@ public class Reserva {
         System.out.println("Lista de reservas:");
         for (int i = 0; i < reservas.size(); i++) {
             Reserva reserva = reservas.get(i);
-            System.out.println((i + 1) + ". CPF: " + reserva.cpf + ", Quarto: " + reserva.quarto + ", Entrada: " + reserva.dataEntrada + ", Saída: " + reserva.dataSaida);
+            System.out.println((i + 1) + ". CPF: " + reserva.cpf + ", Quarto: " + reserva.quarto +
+                    ", Entrada: " + reserva.dataEntrada + ", Saída: " + reserva.dataSaida);
         }
     
         System.out.println("Digite o número da reserva que deseja alterar:");
@@ -263,7 +270,9 @@ public class Reserva {
         } while (continuarAlterando);
     
         System.out.println("Reserva alterada com sucesso:");
-        System.out.println("CPF: " + reservaSelecionada.cpf + ", Quarto: " + reservaSelecionada.quarto + ", Nova Entrada: " + reservaSelecionada.dataEntrada + ", Nova Saída: " + reservaSelecionada.dataSaida);
+        System.out.println("CPF: " + reservaSelecionada.cpf + ", Quarto: " +
+                reservaSelecionada.quarto + ", Nova Entrada: " + reservaSelecionada.dataEntrada +
+                ", Nova Saída: " + reservaSelecionada.dataSaida);
     }
     
 }
