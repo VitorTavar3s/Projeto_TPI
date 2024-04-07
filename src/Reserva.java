@@ -2,6 +2,8 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -12,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Reserva {
     static Scanner scanner = new Scanner(System.in);
@@ -154,13 +158,14 @@ public class Reserva {
                 " " +diaSemanaEntrada + " e check-out dia: " + saida + " " +diaSemanaSaida + "! \n" +
                 "O valor total da hospedagem é de R$" + totalReserva);
         Reserva.salvarReservaArquivo(reservas);
+
     }
     public static void salvarReservaArquivo(List<Reserva> reservas){
         try(BufferedWriter writer = new BufferedWriter(new FileWriter("reserva.csv"))){
             writer.write("CPF;Quarto;DataEntrada;DataSaida");
             writer.newLine();
             for(Reserva reserva : reservas){
-                String linha = reserva.cpf + ";" + reserva.quarto + ";" + ";" +
+                String linha = reserva.cpf + ";" + reserva.quarto + ";" +
                         reserva.dataEntrada + ";" + reserva.dataSaida;
                 writer.write(linha);
                 writer.newLine();
@@ -169,6 +174,37 @@ public class Reserva {
         } catch (IOException e) {
             System.err.println("Erro ao salvar no arquivo reserva.csv"+ e.getMessage());
         }
+    }
+    public static List<Reserva> lerReservasArquivo(){
+        try {
+            Stream<String> stream = Files.lines(Paths.get("reserva.csv"));
+            List<Reserva> reservas =
+                    stream.skip(1)
+                            .map(Reserva::mapear)
+                            .collect(Collectors.toList());
+            stream.close();
+            return reservas;
+        } catch (IOException e) {
+            System.out.println("Erro ao ler o arquivo"+ e.getMessage());
+            return new ArrayList<>(); // Retorna uma lista vazia caso ocorra erros
+        }
+
+    }
+    public static Reserva mapear(String linha){
+        String[] partes = linha.split(";");
+        String cpf = partes[0];
+        int quarto = Integer.parseInt(partes[1]);
+        LocalDateTime dataEntrada = null;
+        LocalDateTime dataSaida = null;
+
+        if (!partes[2].isEmpty()) {
+            dataEntrada = LocalDateTime.parse(partes[2]);
+        }
+
+        if (!partes[3].isEmpty()) {
+            dataSaida = LocalDateTime.parse(partes[3]);
+        }
+        return new Reserva(cpf,quarto,dataEntrada,dataSaida);
     }
     public static void cancelar() {
         if (reservas.isEmpty()) {
@@ -196,6 +232,9 @@ public class Reserva {
         System.out.println("Reserva cancelada com sucesso:");
         System.out.println("CPF: " + reservaCancelada.cpf + ", Quarto: " + reservaCancelada.quarto +
                 ", Entrada: " + reservaCancelada.dataEntrada + ", Saída: " + reservaCancelada.dataSaida);
+
+        Reserva.salvarReservaArquivo(reservas);
+        Reserva.lerReservasArquivo();
     }
 
     public static void alterar() { 
@@ -308,6 +347,9 @@ public class Reserva {
         System.out.println("CPF: " + reservaSelecionada.cpf + ", Quarto: " +
                 reservaSelecionada.quarto + ", Nova Entrada: " + reservaSelecionada.dataEntrada +
                 ", Nova Saída: " + reservaSelecionada.dataSaida);
+
+        Reserva.salvarReservaArquivo(reservas);
+        Reserva.lerReservasArquivo();
     }
 
 }

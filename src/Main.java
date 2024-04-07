@@ -6,6 +6,8 @@ public class Main {
     static Scanner scanner = new Scanner(System.in);
     static List<Hospede> hospedes = Hospede.lerHospedeArquivo();
 
+    static List<Reserva> reservas = Reserva.lerReservasArquivo();
+
     public static void main(String[] args) {
         //Check-in - Check-out de um hotel
         //RESERVAR - Recebe o nome e cpf(identificador) do hóspede / Escolhe o quarto / Escolhe a data de entrada e de saída.
@@ -40,6 +42,4 @@ public class Main {
             }
         } while (opcao != 5);
     }
-
-
 }
