@@ -1,3 +1,7 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -149,8 +153,23 @@ public class Reserva {
                 "Você ficará hospedado por " + diasHospedagem + " dias, check-in dia: " + entrada +
                 " " +diaSemanaEntrada + " e check-out dia: " + saida + " " +diaSemanaSaida + "! \n" +
                 "O valor total da hospedagem é de R$" + totalReserva);
+        Reserva.salvarReservaArquivo(reservas);
     }
-
+    public static void salvarReservaArquivo(List<Reserva> reservas){
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter("reserva.csv"))){
+            writer.write("CPF;Quarto;DataEntrada;DataSaida");
+            writer.newLine();
+            for(Reserva reserva : reservas){
+                String linha = reserva.cpf + ";" + reserva.quarto + ";" + ";" +
+                        reserva.dataEntrada + ";" + reserva.dataSaida;
+                writer.write(linha);
+                writer.newLine();
+            }
+            System.out.println("Reservas salvas com sucesso!");
+        } catch (IOException e) {
+            System.err.println("Erro ao salvar no arquivo reserva.csv"+ e.getMessage());
+        }
+    }
     public static void cancelar() {
         if (reservas.isEmpty()) {
             System.out.println("Não há reservas para cancelar.");
@@ -290,5 +309,5 @@ public class Reserva {
                 reservaSelecionada.quarto + ", Nova Entrada: " + reservaSelecionada.dataEntrada +
                 ", Nova Saída: " + reservaSelecionada.dataSaida);
     }
-    
+
 }
