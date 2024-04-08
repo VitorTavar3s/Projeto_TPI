@@ -19,7 +19,6 @@ import java.util.stream.Stream;
 
 public class Reserva {
     static Scanner scanner = new Scanner(System.in);
-    static List<Reserva> reservas = new ArrayList<>();
 
     String cpf;
     int quarto;
@@ -99,7 +98,7 @@ public class Reserva {
             return;
         }
 
-        System.out.println("Digite a hora de Check-in(HH:mm)-(A diária é contabilizada à partir de 12:00h):");
+        System.out.println("Digite a hora de Check-in(HH:mm):");
         String entradaHora = scanner.nextLine();
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         try {
@@ -128,7 +127,7 @@ public class Reserva {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy-HH:mm");
         LocalDateTime dataEntrada = LocalDateTime.parse(entrada + "-" + entradaHora, formatter);
 
-        System.out.println("Digite a hora de Check-out(HH:mm)-(A diária é contabilizada à partir de 12:00h):");
+        System.out.println("Digite a hora de Check-out(HH:mm):");
         String saidaHora = scanner.nextLine();
         try {
             timeFormatter.parse(saidaHora);
@@ -140,9 +139,12 @@ public class Reserva {
         LocalDateTime dataSaida = LocalDateTime.parse(saida + "-" + saidaHora, formatter);
 
         Reserva reserva = new Reserva(cpf2,quarto,dataEntrada,dataSaida);
-        reservas.add(reserva);
+        Main.reservas.add(reserva);
 
         long diasHospedagem = ChronoUnit.DAYS.between(dataEntrada.toLocalDate(), dataSaida.toLocalDate());
+        if (dataSaida.toLocalDate().isEqual(dataEntrada.toLocalDate())){
+            diasHospedagem = 1;
+        }
 
         double totalReserva = valorDiaria * diasHospedagem;
 
@@ -157,7 +159,7 @@ public class Reserva {
                 "Você ficará hospedado por " + diasHospedagem + " dias, check-in dia: " + entrada +
                 " " +diaSemanaEntrada + " e check-out dia: " + saida + " " +diaSemanaSaida + "! \n" +
                 "O valor total da hospedagem é de R$" + totalReserva);
-        Reserva.salvarReservaArquivo(reservas);
+        Reserva.salvarReservaArquivo(Main.reservas);
 
     }
     public static void salvarReservaArquivo(List<Reserva> reservas){
@@ -180,6 +182,7 @@ public class Reserva {
             Stream<String> stream = Files.lines(Paths.get("reserva.csv"));
             List<Reserva> reservas =
                     stream.skip(1)
+                            .filter(linha -> !linha.trim().isEmpty())
                             .map(Reserva::mapear)
                             .collect(Collectors.toList());
             stream.close();
@@ -207,14 +210,14 @@ public class Reserva {
         return new Reserva(cpf,quarto,dataEntrada,dataSaida);
     }
     public static void cancelar() {
-        if (reservas.isEmpty()) {
+        if (Main.reservas.isEmpty()) {
             System.out.println("Não há reservas para cancelar.");
             return;
         }
     
         System.out.println("Lista de reservas:");
-        for (int i = 0; i < reservas.size(); i++) {
-            Reserva reserva = reservas.get(i);
+        for (int i = 0; i < Main.reservas.size(); i++) {
+            Reserva reserva = Main.reservas.get(i);
             System.out.println((i + 1) + ". CPF: " + reserva.cpf + ", Quarto: " + reserva.quarto +
                     ", Entrada: " + reserva.dataEntrada + ", Saída: " + reserva.dataSaida);
         }
@@ -223,30 +226,30 @@ public class Reserva {
         int numeroReserva = scanner.nextInt();
         scanner.nextLine(); 
     
-        if (numeroReserva < 1 || numeroReserva > reservas.size()) {
+        if (numeroReserva < 1 || numeroReserva > Main.reservas.size()) {
             System.out.println("Número de reserva inválido.");
             return;
         }
     
-        Reserva reservaCancelada = reservas.remove(numeroReserva - 1);
+        Reserva reservaCancelada = Main.reservas.remove(numeroReserva - 1);
         System.out.println("Reserva cancelada com sucesso:");
         System.out.println("CPF: " + reservaCancelada.cpf + ", Quarto: " + reservaCancelada.quarto +
                 ", Entrada: " + reservaCancelada.dataEntrada + ", Saída: " + reservaCancelada.dataSaida);
 
-        Reserva.salvarReservaArquivo(reservas);
+        Reserva.salvarReservaArquivo(Main.reservas);
         Reserva.lerReservasArquivo();
     }
 
     public static void alterar() { 
         
-        if (reservas.isEmpty()) {
+        if (Main.reservas.isEmpty()) {
             System.out.println("Não há reservas para alterar.");
             return;
         }
     
         System.out.println("Lista de reservas:");
-        for (int i = 0; i < reservas.size(); i++) {
-            Reserva reserva = reservas.get(i);
+        for (int i = 0; i < Main.reservas.size(); i++) {
+            Reserva reserva = Main.reservas.get(i);
             System.out.println((i + 1) + ". CPF: " + reserva.cpf + ", Quarto: " + reserva.quarto +
                     ", Entrada: " + reserva.dataEntrada + ", Saída: " + reserva.dataSaida);
         }
@@ -255,12 +258,12 @@ public class Reserva {
         int numeroReserva = scanner.nextInt();
         scanner.nextLine();
     
-        if (numeroReserva < 1 || numeroReserva > reservas.size()) {
+        if (numeroReserva < 1 || numeroReserva > Main.reservas.size()) {
             System.out.println("Número de reserva inválido.");
             return;
         }
     
-        Reserva reservaSelecionada = reservas.get(numeroReserva - 1);
+        Reserva reservaSelecionada = Main.reservas.get(numeroReserva - 1);
     
         boolean continuarAlterando = true;
     
@@ -282,9 +285,8 @@ public class Reserva {
                 case 1:
                     System.out.println("Escolha o novo tipo de quarto:");
                     System.out.println("1-Quarto Simples | 2-Quarto Duplo | 3-Suíte Dupla | 4-Suíte Presidencial");
-                    char novoQuarto = scanner.next().charAt(0);
+                    reservaSelecionada.quarto = scanner.nextInt();
                     scanner.nextLine();
-                    reservaSelecionada.quarto = novoQuarto;
                     break;
                 case 2:
                     System.out.println("Digite a nova data de Check-in (dd/MM/yyyy):");
@@ -348,7 +350,7 @@ public class Reserva {
                 reservaSelecionada.quarto + ", Nova Entrada: " + reservaSelecionada.dataEntrada +
                 ", Nova Saída: " + reservaSelecionada.dataSaida);
 
-        Reserva.salvarReservaArquivo(reservas);
+        Reserva.salvarReservaArquivo(Main.reservas);
         Reserva.lerReservasArquivo();
     }
 

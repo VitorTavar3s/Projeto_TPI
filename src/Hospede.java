@@ -70,9 +70,10 @@ public class Hospede {
        try {
            Stream<String> stream = Files.lines(Paths.get("hospede.csv"));
            List<Hospede> hospedes =
-                   stream.skip(1)
-                   .map(Hospede::mapear)
-                   .collect(Collectors.toList());
+                   stream.skip(1).
+                           filter(linha -> !linha.trim().isEmpty()).
+                           map(Hospede::mapear).
+                           toList();
            stream.close();
            return hospedes;
        }catch (IOException e){
@@ -83,9 +84,9 @@ public class Hospede {
 
     public static Hospede mapear(String linha) {
         String[] partes = linha.split(";");
-        String cpf = partes[0];
-        String nome = partes[1];
-        return new Hospede(cpf,nome);
+            String cpf = partes[0];
+            String nome = partes[1];
+            return new Hospede(cpf, nome);
     }
 
 }
