@@ -1,4 +1,4 @@
-# ADA Gerenciamento de Hotel 🏨
+# ADA - Gerenciamento de Hotel 🏨
 
 #### ✒️author- [Bruno Tavares](https://www.linkedin.com/in/brunoviniciusdev/) - [Ingrid Maciel](https://www.linkedin.com/in/ingrid-m-maciel/) - [Pedro Renan](https://www.linkedin.com/in/pedrorenan/) - [Vitor Tavares](https://www.linkedin.com/in/vitortavares1/)
 
@@ -19,6 +19,11 @@ Para adicionar um novo hóspede ao sistema, execute a opção "Adicionar Hósped
 ### Reserva de Quartos 🛏️
 
 Para reservar um quarto, selecione a opção "Reservar Quarto" no menu principal. O sistema exibirá a lista de hóspedes cadastrados e os tipos de quartos disponíveis. Siga as instruções para escolher o hóspede, o tipo de quarto e as datas de check-in e check-out.
+* Tipos de quarto disponíveis e preços:
+  - Quarto Simples: R$100,00 por diária
+  - Quarto Duplo: R$180,00 por diária
+  - Suíte Dupla: R$250,00 por diária
+  - Suíte Presidencial: R$350,00 por diária
 
 ### Cancelamento de Reservas ❌
 
