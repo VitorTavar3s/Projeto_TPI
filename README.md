@@ -4,13 +4,19 @@
 
 Este é um sistema de gerenciamento de hotel desenvolvido em Java. O sistema permite cadastrar hóspedes e realizar a alocação de quartos.
 
+## Utilizado :
+
+- Java 17
+- Programação Orientada a Objetos (POO)
+- Manipulação de arquivos CSV
+- Tratamento de exceções
+
 ## Funcionalidades 🛠️
 
 * Cadastro de hóspedes ✍️
 * Reserva de quartos 🛏️
 * Cancelamento de reservas ❌
 * Alteração de reservas 🔄
-* Armazenamento de dados em arquivo CSV
 
 ### Cadastro de Hóspedes 📝
 
